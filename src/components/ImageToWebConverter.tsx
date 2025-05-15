@@ -5,8 +5,9 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { generateCodeFromImage } from "@/utils/imageToWeb";
-import { Upload, Code, Maximize, Minimize } from "lucide-react";
+import { Upload, Code, Maximize, Minimize, PenLine } from "lucide-react";
 import CodePreview from "./CodePreview";
+import CssEditor from "./CssEditor";
 
 const ImageToWebConverter = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -64,6 +65,10 @@ const ImageToWebConverter = () => {
 
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
+  };
+
+  const handleCodeUpdate = (newCode: string) => {
+    setGeneratedCode(newCode);
   };
 
   const containerStyle = {
@@ -377,6 +382,10 @@ const ImageToWebConverter = () => {
                     <Code style={{ height: "16px", width: "16px" }} />
                     Code
                   </TabsTrigger>
+                  <TabsTrigger value="editor" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <PenLine style={{ height: "16px", width: "16px" }} />
+                    Edit
+                  </TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent value="preview" style={{ padding: "0" }}>
@@ -387,7 +396,7 @@ const ImageToWebConverter = () => {
                   maxHeight: "600px", 
                   overflow: "auto" 
                 }}>
-                  <div
+                  <div 
                     style={{ width: "100%", height: "100%" }}
                     dangerouslySetInnerHTML={{ __html: generatedCode }}
                   />
@@ -395,6 +404,12 @@ const ImageToWebConverter = () => {
               </TabsContent>
               <TabsContent value="code" style={{ padding: "0" }}>
                 <CodePreview code={generatedCode} />
+              </TabsContent>
+              <TabsContent value="editor" style={{ padding: "0" }}>
+                <CssEditor 
+                  generatedCode={generatedCode}
+                  onCodeUpdate={handleCodeUpdate}
+                />
               </TabsContent>
             </Tabs>
           </Card>

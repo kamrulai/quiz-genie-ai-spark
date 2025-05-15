@@ -46,6 +46,16 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
     fontSize: "0.875rem"
   };
 
+  // Format code for better syntax highlighting
+  const formatCode = (code: string) => {
+    // Add some basic syntax highlighting
+    return code
+      .replace(/(&lt;[\/]?[a-zA-Z0-9]+)/g, '<span style="color: #f87171;">$1</span>')
+      .replace(/([a-zA-Z-]+)=/g, '<span style="color: #60a5fa;">$1</span>=')
+      .replace(/"(.*?)"/g, '"<span style="color: #a78bfa;">$1</span>"')
+      .replace(/style="(.*?)"/g, 'style="<span style="color: #4ade80;">$1</span>"');
+  };
+
   return (
     <div style={{ position: "relative" }}>
       <div style={headerStyle}>
@@ -63,7 +73,7 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
         </Button>
       </div>
       <pre style={codeContainerStyle}>
-        <code>{code}</code>
+        <code dangerouslySetInnerHTML={{ __html: formatCode(code) }} />
       </pre>
     </div>
   );

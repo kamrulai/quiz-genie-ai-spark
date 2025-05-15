@@ -25,7 +25,10 @@ export const generateCodeFromImage = async (image: File): Promise<string> => {
                   Make it look exactly like the image. Use modern React and inline style objects.
                   Respond only with the HTML and CSS code, no explanations needed.
                   Make sure the code is fully responsive and will adapt to different screen sizes.
-                  Use only inline CSS styles with React style objects, NOT Tailwind classes.
+                  Use only inline CSS styles with style attributes, NOT React style objects.
+                  The output should be pure HTML with inline styles that can be directly inserted into the DOM.
+                  Do not use any React components or JSX syntax in your response.
+                  Make sure all styles are applied directly to the elements using the style attribute.
                   `,
                 },
                 {
