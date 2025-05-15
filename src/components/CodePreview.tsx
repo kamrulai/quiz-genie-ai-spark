@@ -22,20 +22,47 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
     }
   };
 
+  const headerStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "16px",
+    backgroundColor: "#f9fafb"
+  };
+
+  const titleStyle = {
+    fontSize: "0.875rem",
+    fontWeight: "600"
+  };
+
+  const codeContainerStyle = {
+    backgroundColor: "#111827",
+    color: "#f9fafb",
+    padding: "16px",
+    borderBottomLeftRadius: "6px",
+    borderBottomRightRadius: "6px",
+    overflow: "auto",
+    maxHeight: "500px",
+    fontSize: "0.875rem"
+  };
+
   return (
-    <div className="relative">
-      <div className="flex justify-between items-center p-4 bg-gray-100">
-        <span className="text-sm font-semibold">React & CSS Code</span>
+    <div style={{ position: "relative" }}>
+      <div style={headerStyle}>
+        <span style={titleStyle}>React & CSS Code</span>
         <Button
           variant="outline"
           size="sm"
           onClick={copyToClipboard}
-          className="text-xs h-8"
+          style={{
+            fontSize: "0.75rem",
+            height: "2rem"
+          }}
         >
           {isCopied ? "Copied!" : "Copy Code"}
         </Button>
       </div>
-      <pre className="bg-gray-900 text-gray-100 p-4 rounded-b-md overflow-auto max-h-[500px] text-sm">
+      <pre style={codeContainerStyle}>
         <code>{code}</code>
       </pre>
     </div>

@@ -66,41 +66,196 @@ const ImageToWebConverter = () => {
     setIsMaximized(!isMaximized);
   };
 
+  const containerStyle = {
+    width: "100%",
+    maxWidth: "64rem",
+    marginLeft: "auto",
+    marginRight: "auto"
+  };
+
+  const headerStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "24px"
+  };
+
+  const titleStyle = {
+    fontSize: "1.875rem",
+    fontWeight: "700",
+    background: "linear-gradient(to right, #9333ea, #ec4899)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent"
+  };
+
+  const cardStyle = {
+    padding: "24px",
+    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    borderTop: "4px solid #8b5cf6"
+  };
+
+  const cardContentStyle = {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "24px"
+  };
+
+  const cardHeaderStyle = {
+    textAlign: "center" as const
+  };
+
+  const cardTitleStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "600"
+  };
+
+  const cardDescriptionStyle = {
+    color: "#6b7280",
+    marginTop: "8px"
+  };
+
+  const uploadContainerStyle = {
+    border: "2px dashed #d1d5db",
+    borderRadius: "0.5rem",
+    padding: "24px",
+    display: "flex",
+    flexDirection: "column" as const,
+    alignItems: "center",
+    justifyContent: "center"
+  };
+
+  const imagePreviewContainerStyle = {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "16px",
+    width: "100%"
+  };
+
+  const imagePreviewStyle = {
+    maxHeight: "16rem",
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: "0.375rem",
+    objectFit: "contain" as const
+  };
+
+  const uploadIconContainerStyle = {
+    height: "4rem",
+    width: "4rem",
+    borderRadius: "9999px",
+    backgroundColor: "#f3e8ff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  };
+
+  const uploadTextContainerStyle = {
+    textAlign: "center" as const,
+    marginTop: "16px"
+  };
+
+  const uploadTextStyle = {
+    fontSize: "0.875rem",
+    color: "#6b7280"
+  };
+
+  const uploadSubtextStyle = {
+    fontSize: "0.75rem",
+    color: "#9ca3af"
+  };
+
+  const buttonStyle = {
+    width: "100%",
+    background: "linear-gradient(to right, #9333ea, #ec4899)",
+    color: "white",
+    padding: "10px",
+    borderRadius: "4px",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "500" as const,
+    transition: "background 0.3s"
+  };
+
+  const loadingStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  };
+
+  const spinnerStyle = {
+    height: "20px",
+    width: "20px",
+    borderTop: "2px solid white",
+    borderBottom: "2px solid white",
+    borderRadius: "9999px",
+    animation: "spin 1s linear infinite",
+    marginRight: "8px"
+  };
+
+  const maximizedStyle = {
+    position: "fixed" as const,
+    inset: "0",
+    zIndex: "50",
+    backgroundColor: "white",
+    padding: "16px"
+  };
+
+  const resultHeaderStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between"
+  };
+
+  const resultTitleStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "700"
+  };
+
+  const buttonGroupStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px"
+  };
+
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+    <div style={containerStyle}>
+      <div style={headerStyle}>
+        <h1 style={titleStyle}>
           Image to Web Converter
         </h1>
         <Button
           variant="outline"
           onClick={() => window.history.back()}
-          className="flex items-center gap-2"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px"
+          }}
         >
           Back
         </Button>
       </div>
 
       {!isGenerated ? (
-        <Card className="p-6 shadow-lg border-t-4 border-t-purple-500">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold">
+        <Card style={cardStyle}>
+          <div style={cardContentStyle}>
+            <div style={cardHeaderStyle}>
+              <h2 style={cardTitleStyle}>
                 Upload an image to convert
               </h2>
-              <p className="text-gray-500 mt-2">
+              <p style={cardDescriptionStyle}>
                 Our AI will convert your image to responsive React code with custom CSS
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center">
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+              <div style={uploadContainerStyle}>
                 {imagePreview ? (
-                  <div className="space-y-4 w-full">
+                  <div style={imagePreviewContainerStyle}>
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="max-h-64 mx-auto rounded-md object-contain"
+                      style={imagePreviewStyle}
                     />
                     <Button
                       type="button"
@@ -109,36 +264,47 @@ const ImageToWebConverter = () => {
                         setSelectedImage(null);
                         setImagePreview(null);
                       }}
-                      className="w-full"
+                      style={{ width: "100%" }}
                     >
                       Remove image
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center space-y-4">
-                    <div className="flex justify-center">
-                      <div className="h-16 w-16 rounded-full bg-purple-100 flex items-center justify-center">
-                        <Upload className="h-8 w-8 text-purple-600" />
+                  <div style={{ textAlign: "center", position: "relative" }}>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <div style={uploadIconContainerStyle}>
+                        <Upload style={{ height: "2rem", width: "2rem", color: "#8b5cf6" }} />
                       </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-500">
+                    <div style={uploadTextContainerStyle}>
+                      <p style={uploadTextStyle}>
                         Drag and drop or click to upload
                       </p>
-                      <p className="text-xs text-gray-400">
+                      <p style={uploadSubtextStyle}>
                         PNG, JPG, GIF up to 5MB
                       </p>
                     </div>
                     <input
                       type="file"
                       accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      style={{
+                        position: "absolute",
+                        inset: "0",
+                        opacity: "0",
+                        cursor: "pointer"
+                      }}
                       onChange={handleImageChange}
                     />
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => document.querySelector('input[type="file"]')?.click()}
+                      onClick={() => {
+                        const fileInput = document.querySelector('input[type="file"]') as HTMLElement;
+                        if (fileInput) {
+                          fileInput.click();
+                        }
+                      }}
+                      style={{ marginTop: "16px" }}
                     >
                       Select image
                     </Button>
@@ -146,43 +312,46 @@ const ImageToWebConverter = () => {
                 )}
               </div>
 
-              <Button
+              <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all"
+                style={{
+                  ...buttonStyle,
+                  opacity: !selectedImage || isLoading ? "0.7" : "1",
+                }}
                 disabled={!selectedImage || isLoading}
               >
                 {isLoading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="h-5 w-5 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
+                  <div style={loadingStyle}>
+                    <div style={spinnerStyle}></div>
                     Generating Code...
                   </div>
                 ) : (
                   "Generate Web Code"
                 )}
-              </Button>
+              </button>
             </form>
           </div>
         </Card>
       ) : (
-        <div className={`space-y-6 ${isMaximized ? 'fixed inset-0 z-50 bg-white p-4' : ''}`}>
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">
+        <div style={isMaximized ? maximizedStyle : { marginBottom: "24px" }}>
+          <div style={resultHeaderStyle}>
+            <h2 style={resultTitleStyle}>
               Generated Code
             </h2>
-            <div className="flex items-center gap-2">
+            <div style={buttonGroupStyle}>
               <Button
                 variant="outline"
                 onClick={toggleMaximize}
-                className="flex items-center gap-2"
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
                 {isMaximized ? (
                   <>
-                    <Minimize className="h-4 w-4" />
+                    <Minimize style={{ height: "16px", width: "16px" }} />
                     Minimize
                   </>
                 ) : (
                   <>
-                    <Maximize className="h-4 w-4" />
+                    <Maximize style={{ height: "16px", width: "16px" }} />
                     Maximize
                   </>
                 )}
@@ -190,36 +359,41 @@ const ImageToWebConverter = () => {
               <Button
                 variant="outline"
                 onClick={handleReset}
-                className="flex items-center gap-2"
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
                 Upload new image
               </Button>
             </div>
           </div>
 
-          <Card className="overflow-hidden">
-            <Tabs defaultValue="preview" className="w-full">
-              <div className="border-b px-4">
-                <TabsList className="h-12">
-                  <TabsTrigger value="preview" className="flex items-center gap-2">
+          <Card style={{ overflow: "hidden", marginTop: "16px" }}>
+            <Tabs defaultValue="preview" style={{ width: "100%" }}>
+              <div style={{ borderBottom: "1px solid #e5e7eb", padding: "0 16px" }}>
+                <TabsList style={{ height: "3rem" }}>
+                  <TabsTrigger value="preview" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     Preview
                   </TabsTrigger>
-                  <TabsTrigger value="code" className="flex items-center gap-2">
-                    <Code className="h-4 w-4" />
+                  <TabsTrigger value="code" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <Code style={{ height: "16px", width: "16px" }} />
                     Code
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <TabsContent value="preview" className="p-0">
-                <div className="bg-white p-6 min-h-[400px] max-h-[600px] overflow-auto">
+              <TabsContent value="preview" style={{ padding: "0" }}>
+                <div style={{ 
+                  backgroundColor: "white", 
+                  padding: "24px", 
+                  minHeight: "400px", 
+                  maxHeight: "600px", 
+                  overflow: "auto" 
+                }}>
                   <div
-                    className="preview-container"
                     style={{ width: "100%", height: "100%" }}
                     dangerouslySetInnerHTML={{ __html: generatedCode }}
                   />
                 </div>
               </TabsContent>
-              <TabsContent value="code" className="p-0">
+              <TabsContent value="code" style={{ padding: "0" }}>
                 <CodePreview code={generatedCode} />
               </TabsContent>
             </Tabs>

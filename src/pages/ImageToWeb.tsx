@@ -3,7 +3,11 @@ import ImageToWebConverter from "@/components/ImageToWebConverter";
 
 const ImageToWeb = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 sm:px-6">
+    <div style={{ 
+      minHeight: "100vh", 
+      background: "linear-gradient(to bottom, #f9fafb, #f3f4f6)", 
+      padding: "40px 16px" 
+    }}>
       <ImageToWebConverter />
     </div>
   );

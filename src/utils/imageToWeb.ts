@@ -21,10 +21,11 @@ export const generateCodeFromImage = async (image: File): Promise<string> => {
             {
               parts: [
                 {
-                  text: `Convert this image to responsive React code with custom CSS. 
-                  Make it look exactly like the image. Use modern React and CSS best practices with Tailwind CSS.
+                  text: `Convert this image to responsive React code with inline CSS styles (no Tailwind or external CSS). 
+                  Make it look exactly like the image. Use modern React and inline style objects.
                   Respond only with the HTML and CSS code, no explanations needed.
                   Make sure the code is fully responsive and will adapt to different screen sizes.
+                  Use only inline CSS styles with React style objects, NOT Tailwind classes.
                   `,
                 },
                 {
