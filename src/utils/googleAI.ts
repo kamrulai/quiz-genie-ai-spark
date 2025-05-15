@@ -11,13 +11,13 @@ export interface QuizQuestion {
 
 export const generateQuiz = async (title: string): Promise<QuizQuestion[]> => {
   try {
+    // For Google Gemini API, we need to ensure we're using the correct endpoint format
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`,
         },
         body: JSON.stringify({
           contents: [
@@ -44,7 +44,9 @@ export const generateQuiz = async (title: string): Promise<QuizQuestion[]> => {
     );
 
     if (!response.ok) {
-      throw new Error("Failed to generate quiz");
+      const errorData = await response.json();
+      console.error("Google API Error:", errorData);
+      throw new Error(`API error: ${errorData.error?.message || "Failed to generate quiz"}`);
     }
 
     const data = await response.json();
