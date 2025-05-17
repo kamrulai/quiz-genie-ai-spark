@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { generateCodeFromImage } from "@/utils/imageToWeb";
 import { Upload, Code, Maximize, Minimize, PenLine } from "lucide-react";
 import CodePreview from "./CodePreview";
-import CssEditor from "./CssEditor";
+import LiveEditor from "./LiveEditor";
 
 const ImageToWebConverter = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -376,40 +375,22 @@ const ImageToWebConverter = () => {
               <div style={{ borderBottom: "1px solid #e5e7eb", padding: "0 16px" }}>
                 <TabsList style={{ height: "3rem" }}>
                   <TabsTrigger value="preview" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    Preview
+                    Preview & Edit
                   </TabsTrigger>
                   <TabsTrigger value="code" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     <Code style={{ height: "16px", width: "16px" }} />
                     Code
                   </TabsTrigger>
-                  <TabsTrigger value="editor" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <PenLine style={{ height: "16px", width: "16px" }} />
-                    Edit
-                  </TabsTrigger>
                 </TabsList>
               </div>
               <TabsContent value="preview" style={{ padding: "0" }}>
-                <div style={{ 
-                  backgroundColor: "white", 
-                  padding: "24px", 
-                  minHeight: "400px", 
-                  maxHeight: "600px", 
-                  overflow: "auto" 
-                }}>
-                  <div 
-                    style={{ width: "100%", height: "100%" }}
-                    dangerouslySetInnerHTML={{ __html: generatedCode }}
-                  />
-                </div>
-              </TabsContent>
-              <TabsContent value="code" style={{ padding: "0" }}>
-                <CodePreview code={generatedCode} />
-              </TabsContent>
-              <TabsContent value="editor" style={{ padding: "0" }}>
-                <CssEditor 
+                <LiveEditor
                   generatedCode={generatedCode}
                   onCodeUpdate={handleCodeUpdate}
                 />
+              </TabsContent>
+              <TabsContent value="code" style={{ padding: "0" }}>
+                <CodePreview code={generatedCode} />
               </TabsContent>
             </Tabs>
           </Card>

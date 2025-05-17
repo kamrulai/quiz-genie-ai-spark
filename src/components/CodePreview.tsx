@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 interface CodePreviewProps {
@@ -46,8 +47,37 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
     fontSize: "0.875rem"
   };
 
+  // Extract CSS from HTML
+  const extractCSS = (htmlCode: string) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlCode;
+    
+    const styles: Record<string, string> = {};
+    const elements = tempDiv.querySelectorAll('*[style]');
+    
+    elements.forEach((el, index) => {
+      const style = el.getAttribute('style');
+      if (style) {
+        const className = `.element-${index}`;
+        styles[className] = style;
+      }
+    });
+    
+    // Format into CSS
+    let cssText = '';
+    Object.entries(styles).forEach(([selector, rules]) => {
+      cssText += `${selector} {\n`;
+      rules.split(';').filter(rule => rule.trim()).forEach(rule => {
+        cssText += `  ${rule.trim()};\n`;
+      });
+      cssText += '}\n\n';
+    });
+    
+    return cssText;
+  };
+
   // Format code for better syntax highlighting
-  const formatCode = (code: string) => {
+  const formatHTML = (code: string) => {
     // Add some basic syntax highlighting
     return code
       .replace(/(&lt;[\/]?[a-zA-Z0-9]+)/g, '<span style="color: #f87171;">$1</span>')
@@ -56,10 +86,17 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
       .replace(/style="(.*?)"/g, 'style="<span style="color: #4ade80;">$1</span>"');
   };
 
+  const formatCSS = (css: string) => {
+    return css
+      .replace(/(\.[a-zA-Z0-9-_]+)/g, '<span style="color: #f87171;">$1</span>')
+      .replace(/\{|\}/g, (match) => `<span style="color: #60a5fa;">${match}</span>`)
+      .replace(/(:[^;]+;)/g, '<span style="color: #a78bfa;">$1</span>');
+  };
+
   return (
     <div style={{ position: "relative" }}>
       <div style={headerStyle}>
-        <span style={titleStyle}>React & CSS Code</span>
+        <span style={titleStyle}>Code Preview</span>
         <Button
           variant="outline"
           size="sm"
@@ -72,9 +109,23 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
           {isCopied ? "Copied!" : "Copy Code"}
         </Button>
       </div>
-      <pre style={codeContainerStyle}>
-        <code dangerouslySetInnerHTML={{ __html: formatCode(code) }} />
-      </pre>
+      
+      <Tabs defaultValue="html">
+        <TabsList className="bg-muted grid w-full grid-cols-2">
+          <TabsTrigger value="html">HTML</TabsTrigger>
+          <TabsTrigger value="css">CSS</TabsTrigger>
+        </TabsList>
+        <TabsContent value="html">
+          <pre style={codeContainerStyle}>
+            <code dangerouslySetInnerHTML={{ __html: formatHTML(code) }} />
+          </pre>
+        </TabsContent>
+        <TabsContent value="css">
+          <pre style={codeContainerStyle}>
+            <code dangerouslySetInnerHTML={{ __html: formatCSS(extractCSS(code)) }} />
+          </pre>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
