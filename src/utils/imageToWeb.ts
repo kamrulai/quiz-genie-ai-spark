@@ -25,14 +25,15 @@ export const generateCodeFromImage = async (image: File): Promise<string> => {
                   Make the output look EXACTLY like the image with precise positioning.
                   
                   Requirements:
-                  1. Use position:absolute for text and UI elements with exact top/left values from the image.
+                  1. Use position:absolute for text and UI elements with PRECISE top/left values in pixels to match exactly the image.
                   2. Set a position:relative container with appropriate width/height.
-                  3. Keep precise spacing, alignment, and sizing from the original design.
-                  4. Preserve exact colors, fonts, sizes, and visual hierarchy.
-                  5. Use only inline CSS styles with style attributes (not React style objects).
-                  6. Ensure all HTML elements have proper opening and closing tags.
-                  7. The output must be pure HTML with inline styles that can be inserted into the DOM.
-                  8. Include all visible text and elements in the exact positions they appear.
+                  3. Preserve all colors, backgrounds, borders, and styling from the image exactly.
+                  4. Match all font sizes, font styles, colors, and text formatting precisely.
+                  5. Include proper styling for all elements including borders, backgrounds, shadows if present.
+                  6. For images, use https://placehold.co/ with appropriate dimensions if needed.
+                  7. Use only inline CSS styles with style attributes (not React style objects).
+                  8. Make sure to set background-color for containers that have backgrounds.
+                  9. Ensure all HTML elements have proper opening and closing tags.
                   
                   DO NOT explain your work - respond ONLY with the complete, valid HTML code.
                   `,

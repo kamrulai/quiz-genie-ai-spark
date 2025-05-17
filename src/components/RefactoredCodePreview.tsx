@@ -52,6 +52,9 @@ const RefactoredCodePreview: React.FC<CodePreviewProps> = ({ code }) => {
     fontSize: "0.875rem"
   };
 
+  const formattedHTML = formatHTML(code);
+  const formattedCSS = formatCSS(extractCSS(code));
+
   return (
     <div style={{ position: "relative" }}>
       <div style={headerStyle}>
@@ -76,12 +79,12 @@ const RefactoredCodePreview: React.FC<CodePreviewProps> = ({ code }) => {
         </TabsList>
         <TabsContent value="html">
           <pre style={codeContainerStyle}>
-            <code dangerouslySetInnerHTML={{ __html: formatHTML(code) }} />
+            <code dangerouslySetInnerHTML={{ __html: formattedHTML }} />
           </pre>
         </TabsContent>
         <TabsContent value="css">
           <pre style={codeContainerStyle}>
-            <code dangerouslySetInnerHTML={{ __html: formatCSS(extractCSS(code)) }} />
+            <code dangerouslySetInnerHTML={{ __html: formattedCSS }} />
           </pre>
         </TabsContent>
       </Tabs>

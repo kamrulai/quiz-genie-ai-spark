@@ -28,8 +28,8 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
                        element.text.startsWith('data:') ||
                        element.text.startsWith('./');
 
-    const elementStyle = {
-      position: "absolute",
+    const elementStyle: React.CSSProperties = {
+      position: "absolute" as const,
       top: `${element.position.top}px`,
       left: `${element.position.left}px`,
       padding: "2px",
