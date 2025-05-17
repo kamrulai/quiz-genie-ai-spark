@@ -21,14 +21,20 @@ export const generateCodeFromImage = async (image: File): Promise<string> => {
             {
               parts: [
                 {
-                  text: `Convert this image to responsive React code with inline CSS styles (no Tailwind or external CSS). 
-                  Make it look exactly like the image. Use modern React and inline style objects.
-                  Respond only with the HTML and CSS code, no explanations needed.
-                  Make sure the code is fully responsive and will adapt to different screen sizes.
-                  Use only inline CSS styles with style attributes, NOT React style objects.
-                  The output should be pure HTML with inline styles that can be directly inserted into the DOM.
-                  Do not use any React components or JSX syntax in your response.
-                  Make sure all styles are applied directly to the elements using the style attribute.
+                  text: `Convert this image to responsive HTML with inline CSS styles. 
+                  Make the output look EXACTLY like the image with precise positioning.
+                  
+                  Requirements:
+                  1. Use position:absolute for text and UI elements with exact top/left values from the image.
+                  2. Set a position:relative container with appropriate width/height.
+                  3. Keep precise spacing, alignment, and sizing from the original design.
+                  4. Preserve exact colors, fonts, sizes, and visual hierarchy.
+                  5. Use only inline CSS styles with style attributes (not React style objects).
+                  6. Ensure all HTML elements have proper opening and closing tags.
+                  7. The output must be pure HTML with inline styles that can be inserted into the DOM.
+                  8. Include all visible text and elements in the exact positions they appear.
+                  
+                  DO NOT explain your work - respond ONLY with the complete, valid HTML code.
                   `,
                 },
                 {
@@ -77,7 +83,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 
 // Helper function to extract code from markdown response
 const extractCodeFromMarkdown = (markdown: string): string => {
-  // Simple regex to find code blocks between ```jsx or ```html and ```
+  // First check for code blocks between ```jsx or ```html and ```
   const codeBlockRegex = /```(?:jsx|html|react|tsx)?\s*([\s\S]*?)```/g;
   const matches = [...markdown.matchAll(codeBlockRegex)];
   
@@ -86,6 +92,21 @@ const extractCodeFromMarkdown = (markdown: string): string => {
     return matches.map(match => match[1].trim()).join('\n\n');
   }
   
-  // If no code blocks found, return the whole text
-  return markdown;
+  // If no code blocks found, clean the raw text to extract HTML
+  // Remove any markdown formatting or explanations
+  let cleanedText = markdown;
+  
+  // Look for HTML tags - find the first opening tag
+  const firstTagIndex = cleanedText.indexOf('<');
+  if (firstTagIndex >= 0) {
+    cleanedText = cleanedText.substring(firstTagIndex);
+    
+    // Find the last closing tag
+    const lastClosingTagMatch = cleanedText.match(/<\/[^>]+>(?![\s\S]*<\/)/);
+    if (lastClosingTagMatch && lastClosingTagMatch.index !== undefined) {
+      cleanedText = cleanedText.substring(0, lastClosingTagMatch.index + lastClosingTagMatch[0].length);
+    }
+  }
+  
+  return cleanedText.trim();
 };

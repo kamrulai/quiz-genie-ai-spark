@@ -1,46 +1,94 @@
 
-// Format code for better syntax highlighting
-export const formatHTML = (code: string): string => {
-  // Add some basic syntax highlighting
-  return code
-    .replace(/(&lt;[\/]?[a-zA-Z0-9]+)/g, '<span style="color: #f87171;">$1</span>')
-    .replace(/([a-zA-Z-]+)=/g, '<span style="color: #60a5fa;">$1</span>=')
-    .replace(/"(.*?)"/g, '"<span style="color: #a78bfa;">$1</span>"')
-    .replace(/style="(.*?)"/g, 'style="<span style="color: #4ade80;">$1</span>"');
+// The function to format HTML code with highlighting
+export const formatHTML = (html: string) => {
+  if (!html) return "";
+
+  // Basic HTML formatting - replace < and > with &lt; and &gt; to display as text
+  let formattedHTML = html
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Add syntax highlighting
+  formattedHTML = formattedHTML
+    // Highlight HTML tags
+    .replace(/&lt;(\/?[a-zA-Z][a-zA-Z0-9]*)/g, '<span style="color: #e06c75;">&lt;$1</span>')
+    // Highlight attributes
+    .replace(/([a-zA-Z-]+)=/g, '<span style="color: #d19a66;">$1</span>=')
+    // Highlight attribute values
+    .replace(/"([^"]*)"/g, '<span style="color: #98c379;">"$1"</span>');
+
+  return formattedHTML;
 };
 
-export const formatCSS = (css: string): string => {
-  return css
-    .replace(/(\.[a-zA-Z0-9-_]+)/g, '<span style="color: #f87171;">$1</span>')
-    .replace(/\{|\}/g, (match) => `<span style="color: #60a5fa;">${match}</span>`)
-    .replace(/(:[^;]+;)/g, '<span style="color: #a78bfa;">$1</span>');
-};
+// Extract CSS from inline styles in HTML
+export const extractCSS = (html: string) => {
+  if (!html) return "";
 
-// Extract CSS from HTML
-export const extractCSS = (htmlCode: string): string => {
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = htmlCode;
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
   
-  const styles: Record<string, string> = {};
-  const elements = tempDiv.querySelectorAll('*[style]');
+  // Find all elements with style attributes
+  const styledElements = tempDiv.querySelectorAll("[style]");
   
-  elements.forEach((el, index) => {
-    const style = el.getAttribute('style');
-    if (style) {
-      const className = `.element-${index}`;
-      styles[className] = style;
-    }
+  // Build a CSS stylesheet
+  let cssRules: { selector: string; styles: string }[] = [];
+  
+  styledElements.forEach((el, index) => {
+    // Create a unique class name
+    const className = `element-${index}`;
+    
+    // Get the element's tag name
+    const tagName = el.tagName.toLowerCase();
+    
+    // Get the style attribute
+    const styleAttr = el.getAttribute("style") || "";
+    
+    // Add to our CSS rules
+    cssRules.push({
+      selector: `.${className}`,
+      styles: styleAttr
+    });
   });
   
-  // Format into CSS
-  let cssText = '';
-  Object.entries(styles).forEach(([selector, rules]) => {
-    cssText += `${selector} {\n`;
-    rules.split(';').filter(rule => rule.trim()).forEach(rule => {
-      cssText += `  ${rule.trim()};\n`;
+  // Format the CSS
+  let cssText = "";
+  cssRules.forEach(rule => {
+    cssText += `${rule.selector} {\n`;
+    
+    // Split the styles by semicolon and format each property
+    const styles = rule.styles.split(";");
+    styles.forEach(style => {
+      const trimmed = style.trim();
+      if (trimmed) {
+        cssText += `  ${trimmed};\n`;
+      }
     });
-    cssText += '}\n\n';
+    
+    cssText += "}\n\n";
   });
   
   return cssText;
+};
+
+// Format CSS with syntax highlighting
+export const formatCSS = (css: string) => {
+  if (!css) return "";
+
+  // Basic CSS formatting
+  let formattedCSS = css
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Add syntax highlighting
+  formattedCSS = formattedCSS
+    // Highlight selectors
+    .replace(/([.#][a-zA-Z0-9_-]+)/g, '<span style="color: #e06c75;">$1</span>')
+    // Highlight properties
+    .replace(/([a-zA-Z-]+):/g, '<span style="color: #d19a66;">$1</span>:')
+    // Highlight values
+    .replace(/:([^;]*);/g, ':<span style="color: #98c379;">$1</span>;')
+    // Highlight braces
+    .replace(/[{}]/g, '<span style="color: #abb2bf;">$&</span>');
+
+  return formattedCSS;
 };

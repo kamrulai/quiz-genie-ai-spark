@@ -31,11 +31,10 @@ const RefactoredLiveEditor: React.FC<LiveEditorProps> = ({ generatedCode, onCode
     
     const processNode = (node: Element) => {
       // Check if this node has text content or is an image
-      if (node.tagName === 'IMG' || (
-          node.childNodes.length > 0 && 
-          Array.from(node.childNodes).some(child => 
-            child.nodeType === Node.TEXT_NODE && child.textContent?.trim()))) {
-        
+      const hasText = Array.from(node.childNodes).some(child => 
+        child.nodeType === Node.TEXT_NODE && child.textContent?.trim());
+      
+      if (node.tagName === 'IMG' || hasText) {
         // Create a unique ID for this element
         const id = `element-${elementId++}`;
         
@@ -53,9 +52,26 @@ const RefactoredLiveEditor: React.FC<LiveEditorProps> = ({ generatedCode, onCode
           });
         }
         
-        // Make all elements position absolute by default if not specified
+        // Ensure position is set
         if (!styleObj['position']) {
           styleObj['position'] = 'absolute';
+        }
+        
+        // Extract position from style
+        let top = parseInt(styleObj['top'] || '0', 10);
+        let left = parseInt(styleObj['left'] || '0', 10);
+        
+        // If position values don't have units, extract them as direct numbers
+        if (styleObj['top'] && !isNaN(top)) {
+          if (!styleObj['top'].includes('px') && !styleObj['top'].includes('%')) {
+            styleObj['top'] = `${top}px`;
+          }
+        }
+        
+        if (styleObj['left'] && !isNaN(left)) {
+          if (!styleObj['left'].includes('px') && !styleObj['left'].includes('%')) {
+            styleObj['left'] = `${left}px`;
+          }
         }
         
         // Get text content for non-image elements
@@ -65,6 +81,9 @@ const RefactoredLiveEditor: React.FC<LiveEditorProps> = ({ generatedCode, onCode
             .filter(child => child.nodeType === Node.TEXT_NODE)
             .map(child => child.textContent)
             .join("");
+        } else {
+          // For images, store the src as text (for displaying in editor)
+          text = node.getAttribute('src') || '';
         }
           
         // Add element to our collection
@@ -72,8 +91,8 @@ const RefactoredLiveEditor: React.FC<LiveEditorProps> = ({ generatedCode, onCode
           text: text.trim(),
           style: styleObj,
           position: {
-            top: parseInt(styleObj['top'] || '10', 10),
-            left: parseInt(styleObj['left'] || '10', 10)
+            top: parseInt(styleObj['top'] || '0', 10),
+            left: parseInt(styleObj['left'] || '0', 10)
           }
         };
           
@@ -179,6 +198,14 @@ const RefactoredLiveEditor: React.FC<LiveEditorProps> = ({ generatedCode, onCode
         
         if (textNodes.length === 1) {
           textNodes[0].textContent = text;
+        } else if (textNodes.length === 0 && text.trim()) {
+          // If no text nodes but we have text, create a new text node
+          element.appendChild(document.createTextNode(text));
+        }
+      } else if (element.tagName === 'IMG') {
+        // For images, update the src if it looks like a URL
+        if (text.startsWith('http') || text.startsWith('data:') || text.startsWith('./')) {
+          element.setAttribute('src', text);
         }
       }
       

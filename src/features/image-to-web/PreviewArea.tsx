@@ -21,6 +21,49 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
 }) => {
   const previewContainerRef = useRef<HTMLDivElement>(null);
 
+  // Determine if text element should render as image
+  const renderElement = (id: string, element: EditableElement) => {
+    // Check if the text looks like an image URL or data URL
+    const isImageSrc = element.text.startsWith('http') || 
+                       element.text.startsWith('data:') ||
+                       element.text.startsWith('./');
+
+    const elementStyle = {
+      position: "absolute",
+      top: `${element.position.top}px`,
+      left: `${element.position.left}px`,
+      padding: "2px",
+      cursor: "move",
+      border: selectedElementId === id ? "2px dashed #4f46e5" : "2px dashed transparent",
+      zIndex: selectedElementId === id ? 10 : 1,
+      ...Object.entries(element.style)
+        .filter(([key]) => key !== 'top' && key !== 'left')
+        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
+    };
+
+    if (isImageSrc) {
+      return (
+        <img 
+          src={element.text}
+          alt="Element" 
+          style={elementStyle} 
+          onMouseDown={(e) => onMouseDown(e, id)}
+          onClick={() => setSelectedElementId(id)}
+        />
+      );
+    }
+
+    return (
+      <div
+        style={elementStyle}
+        onMouseDown={(e) => onMouseDown(e, id)}
+        onClick={() => setSelectedElementId(id)}
+      >
+        {element.text}
+      </div>
+    );
+  };
+
   return (
     <div 
       ref={previewContainerRef}
@@ -38,25 +81,9 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
       onMouseLeave={onMouseUp}
     >
       {Object.entries(editableElements).map(([id, element]) => (
-        <div
-          key={id}
-          style={{
-            position: "absolute",
-            top: `${element.position.top}px`,
-            left: `${element.position.left}px`,
-            padding: "2px",
-            cursor: "move",
-            border: selectedElementId === id ? "2px dashed #4f46e5" : "2px dashed transparent",
-            zIndex: selectedElementId === id ? 10 : 1,
-            ...Object.entries(element.style)
-              .filter(([key]) => key !== 'top' && key !== 'left')
-              .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
-          }}
-          onMouseDown={(e) => onMouseDown(e, id)}
-          onClick={() => setSelectedElementId(id)}
-        >
-          {element.text}
-        </div>
+        <React.Fragment key={id}>
+          {renderElement(id, element)}
+        </React.Fragment>
       ))}
     </div>
   );

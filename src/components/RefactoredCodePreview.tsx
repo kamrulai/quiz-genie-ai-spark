@@ -11,10 +11,14 @@ interface CodePreviewProps {
 
 const RefactoredCodePreview: React.FC<CodePreviewProps> = ({ code }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("html");
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(code);
+      // Copy appropriate content based on active tab
+      const contentToCopy = activeTab === "html" ? code : extractCSS(code);
+      
+      await navigator.clipboard.writeText(contentToCopy);
       setIsCopied(true);
       toast.success("Code copied to clipboard!");
       setTimeout(() => setIsCopied(false), 2000);
@@ -65,8 +69,8 @@ const RefactoredCodePreview: React.FC<CodePreviewProps> = ({ code }) => {
         </Button>
       </div>
       
-      <Tabs defaultValue="html">
-        <TabsList className="bg-muted grid w-full grid-cols-2">
+      <Tabs defaultValue="html" onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="html">HTML</TabsTrigger>
           <TabsTrigger value="css">CSS</TabsTrigger>
         </TabsList>
