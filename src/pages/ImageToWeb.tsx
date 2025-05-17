@@ -1,5 +1,5 @@
 
-import ImageToWebConverter from "@/components/ImageToWebConverter";
+import RefactoredImageToWebConverter from "@/features/image-to-web/RefactoredImageToWebConverter";
 
 const ImageToWeb = () => {
   return (
@@ -8,7 +8,7 @@ const ImageToWeb = () => {
       background: "linear-gradient(to bottom, #f9fafb, #f3f4f6)", 
       padding: "40px 16px" 
     }}>
-      <ImageToWebConverter />
+      <RefactoredImageToWebConverter />
     </div>
   );
 };

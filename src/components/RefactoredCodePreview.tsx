@@ -9,7 +9,7 @@ interface CodePreviewProps {
   code: string;
 }
 
-const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
+const RefactoredCodePreview: React.FC<CodePreviewProps> = ({ code }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = async () => {
@@ -85,4 +85,4 @@ const CodePreview: React.FC<CodePreviewProps> = ({ code }) => {
   );
 };
 
-export default CodePreview;
+export default RefactoredCodePreview;
